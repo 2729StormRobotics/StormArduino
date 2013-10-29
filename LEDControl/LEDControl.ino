@@ -1,4 +1,4 @@
-#define LEDCount 10 //placeholder
+#define LEDCount 32 //If the strip doesn't change
 
 class LED {
   public: 
