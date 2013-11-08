@@ -19,7 +19,6 @@ int ledPin = 13; //On board LED
 
 class LEDMode {
   public:
-    virtual void initialize();
     virtual void doLoop();
 };
 
@@ -27,7 +26,6 @@ class Marquee : public LEDMode {
   int count = 0;
 
   public:
-    void initialize() {}
     void doLoop() {
   
       for (int i = 0; i < LEDCount; i++){
@@ -45,7 +43,6 @@ class ColorCycle : public LEDMode {
   int delayCounter = 0; //To make it not change every time it cycles, which is 20 times per second
 
   public:
-    void initialize() {}
     void doLoop(){
       if (delayCounter == 0) {
         for (int i = 0; i < LEDCount; i++){
@@ -81,7 +78,6 @@ class Pew : public LEDMode {
   int colorCounter = 0;
 
   public:
-    void initialize() {}
     void doLoop() {
       
       long currentColor;
@@ -116,9 +112,7 @@ class Pew : public LEDMode {
 
 LEDMode* currentMode = new Marquee();
 
-void setup(){
-  currentMode->initialize();
-}
+void setup(){}
 
 void loop(){
   currentMode->doLoop();
