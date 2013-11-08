@@ -17,9 +17,24 @@ int SDI = 2; //Red wire (not the red 5V wire!)
 int CKI = 3; //Green wire
 int ledPin = 13; //On board LED
 
+int inPin1 = 0; //TODO get these pins
+int inPin2 = 0;
+
+int pin1PrevVal = LOW;
+int pin2PrevVal = LOW;
+
 class LEDMode {
   public:
     virtual void doLoop();
+};
+
+class SolidWhite : public LEDMode {
+  public:
+    void doLoop() {
+      for (int i = 0; i < LEDCount; i++) {
+        leds[i] = WHITE;
+      }
+    }
 };
 
 class Marquee : public LEDMode {
@@ -110,15 +125,58 @@ class Pew : public LEDMode {
 
 };
 
-LEDMode* currentMode = new Marquee();
+SolidWhite* solidWhiteInst = new SolidWhite();
+ColorCycle* colorCycleInst = new ColorCycle();
+Marquee*    marqueeInst    = new Marquee();
+Pew*        pewInst        = new Pew();
 
-void setup(){}
+
+LEDMode* currentMode = solidWhiteInst;
+
+void setup(){
+  pinMode(inPin1, INPUT);
+  pinMode(inPin2, INPUT);
+}
 
 void loop(){
   currentMode->doLoop();
   post_frame();
 
-  //TODO changing modes
+  changeMode();
+}
+
+void changeMode(){
+
+  int pin1CurrVal = digitalRead(inPin1);
+  int pin2CurrVal = digitalRead(inPin2);
+
+  if (pin1CurrVal !=  pin1PrevVal || pin2CurrVal != pin2CurrVal) {
+
+    if (pin1CurrVal == LOW){
+
+      if (pin2CurrVal == LOW){
+        currentMode = solidWhiteInst;
+      } 
+      else if (pin2CurrVal == HIGH) {
+        currentMode = colorCycleInst;
+      }
+
+    }
+    else if (pin1CurrVal == HIGH) {
+
+      if (pin2CurrVal == LOW) {
+        currentMode = marqueeInst;
+      }
+      else if (pin2CurrVal == HIGH) {
+        currentMode = pewInst;
+      }
+
+    }
+
+  }
+
+  pin1PrevVal = pin1CurrVal;
+  pin2PrevVal = pin2CurrVal;
 }
 
 //Takes the current strip color array and pushes it out
