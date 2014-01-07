@@ -1,8 +1,18 @@
-//see example code for wiring
+#include <SPI.h>
+#include <Ethernet.h>
+#include "FastSPI_LED2.h"
 
-#define LEDCount 32 //If the strip doesn't change
+#define NUM_LEDS  32
+#define DATA_PIN  11
+#define CLOCK_PIN 13
 
-long leds[LEDCount];
+CRGB leds[NUM_LEDS];
+
+EthernetClient client;
+byte           mac[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; //TODO find mac address
+IPAddress      ip(123,45,67,89); //TODO get usable IP Address
+IPAddress      robotIP(123,45,67,89); //TODO get robot IP address
+int            port = 20; //TODO get the port
 
 long WHITE   = 0xFFFFFF;
 long BLACK   = 0x000000;
@@ -13,16 +23,6 @@ long YELLOW  = 0xFFFF00;
 long MAGENTA = 0xFF00FF;
 long CYAN    = 0x00FFFF;
 
-int SDI = 2; //Red wire (not the red 5V wire!)
-int CKI = 3; //Green wire
-int ledPin = 13; //On board LED
-
-int inPin1 = 0; //TODO get these pins
-int inPin2 = 0;
-
-int pin1PrevVal = LOW;
-int pin2PrevVal = LOW;
-
 class LEDMode {
   public:
     virtual void doLoop();
@@ -31,7 +31,7 @@ class LEDMode {
 class SolidWhite : public LEDMode {
   public:
     void doLoop() {
-      for (int i = 0; i < LEDCount; i++) {
+      for (int i = 0; i < NUM_LEDS; i++) {
         leds[i] = WHITE;
       }
     }
@@ -43,7 +43,7 @@ class Marquee : public LEDMode {
   public:
     void doLoop() {
   
-      for (int i = 0; i < LEDCount; i++){
+      for (int i = 0; i < NUM_LEDS; i++){
         if ((i + count) % 3 == 0) leds[i] = WHITE;
         else                      leds[i] = BLACK;
       }
@@ -60,7 +60,7 @@ class ColorCycle : public LEDMode {
   public:
     void doLoop(){
       if (delayCounter == 0) {
-        for (int i = 0; i < LEDCount; i++){
+        for (int i = 0; i < NUM_LEDS; i++){
           switch (count){
             case 0:  leds[i] = WHITE;
                      break;
@@ -109,7 +109,7 @@ class Pew : public LEDMode {
         default: break;
       }
 
-      for (int i = 0; i < LEDCount; i++){
+      for (int i = 0; i < NUM_LEDS; i++){
         if (i == 15 - count || i == 16 + count) leds[i] = currentColor;
         else                                    leds[i] = BLACK;
       }
@@ -134,8 +134,40 @@ Pew*        pewInst        = new Pew();
 LEDMode* currentMode = solidWhiteInst;
 
 void setup(){
-  pinMode(inPin1, INPUT);
-  pinMode(inPin2, INPUT);
+  
+  Ethernet.begin(mac, ip);
+  
+  bool connection = false;
+  while (!connection){
+    if (client.connect(robotIP, port)){
+      connection = true;
+    }
+    else{
+      delay(1);
+    }
+  }
+  
+  // Uncomment one of the following lines for your leds arrangement.
+  // TODO Find LED strip type
+  // FastLED.addLeds<TM1803, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<TM1804, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<TM1809, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<WS2812, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<UCS1903, DATA_PIN, RGB>(leds, NUM_LEDS);
+
+  //This is the chipset in the AM-2640 LED strip
+  //FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS);
+
+  // FastLED.addLeds<SM16716, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<LPD8806, RGB>(leds, NUM_LEDS);
+
+  // FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<SM16716, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
+  // FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
+
+  FastLED.clear();
 }
 
 void loop(){
@@ -146,67 +178,36 @@ void loop(){
 }
 
 void changeMode(){
-
-  int pin1CurrVal = digitalRead(inPin1);
-  int pin2CurrVal = digitalRead(inPin2);
-
-  if (pin1CurrVal !=  pin1PrevVal || pin2CurrVal != pin2CurrVal) {
-
-    if (pin1CurrVal == LOW){
-
-      if (pin2CurrVal == LOW){
-        currentMode = solidWhiteInst;
-      } 
-      else if (pin2CurrVal == HIGH) {
-        currentMode = colorCycleInst;
-      }
-
+  if (client.available()){
+    byte c = client.read();
+    switch (c){
+      case 0:  currentMode = solidWhiteInst;
+               break;
+      case 1:  currentMode = colorCycleInst;
+               break;
+      case 2:  currentMode = marqueeInst;
+               break;
+      case 3:  currentMode = pewInst;
+               break;
+      default: break;
     }
-    else if (pin1CurrVal == HIGH) {
-
-      if (pin2CurrVal == LOW) {
-        currentMode = marqueeInst;
-      }
-      else if (pin2CurrVal == HIGH) {
-        currentMode = pewInst;
-      }
-
-    }
-
   }
 
-  pin1PrevVal = pin1CurrVal;
-  pin2PrevVal = pin2CurrVal;
+  //If we lost connection, wait until reconnected
+  if (!client.connected()){
+    bool connection = false;
+    while (!connection){
+      if (client.connect(robotIP, port)){
+        connection = true;
+      }
+      else{
+        delay(1);
+      }
+    } 
+  }
 }
 
-//Takes the current strip color array and pushes it out
-void post_frame (void) {
-  //Each LED requires 24 bits of data
-  //MSB: R7, R6, R5..., G7, G6..., B7, B6... B0 
-  //Once the 24 bits have been delivered, the IC immediately relays these bits to its neighbor
-  //Pulling the clock low for 500us or more causes the IC to post the data.
-
-  for(int LED_number = 0 ; LED_number < LEDCount ; LED_number++) {
-    long this_led_color = leds[LED_number]; //24 bits of color data
-
-    for(byte color_bit = 23 ; color_bit != 255 ; color_bit--) {
-      //Feed color bit 23 first (red data MSB)
-      
-      digitalWrite(CKI, LOW); //Only change data when clock is low
-      
-      long mask = 1L << color_bit;
-      //The 1'L' forces the 1 to start as a 32 bit number, otherwise it defaults to 16-bit.
-      
-      if(this_led_color & mask) 
-        digitalWrite(SDI, HIGH);
-      else
-        digitalWrite(SDI, LOW);
-  
-      digitalWrite(CKI, HIGH); //Data is latched when clock goes high
-    }
-  }
-
-  //Pull clock low to put strip into reset/post mode
-  digitalWrite(CKI, LOW);
-  delayMicroseconds(500); //Wait for 500us to go into reset
+void post_frame () {
+  FastLED.show();
+  delayMicroseconds(500);
 }
