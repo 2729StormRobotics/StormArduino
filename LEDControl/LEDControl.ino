@@ -23,6 +23,13 @@ long YELLOW  = 0xFFFF00;
 long MAGENTA = 0xFF00FF;
 long CYAN    = 0x00FFFF;
 
+enum Mode {
+  SolidWhite,
+  Marquee,
+  ColorCycle,
+  Pew
+};
+
 class LEDMode {
   public:
     virtual void doLoop();
@@ -42,7 +49,7 @@ class Marquee : public LEDMode {
 
   public:
     void doLoop() {
-  
+
       for (int i = 0; i < NUM_LEDS; i++){
         if ((i + count) % 3 == 0) leds[i] = WHITE;
         else                      leds[i] = BLACK;
@@ -82,7 +89,7 @@ class ColorCycle : public LEDMode {
         count++;
         count %= 7;
       }
-      
+
       delayCounter++;
       delayCounter %= 20; //Cycle once per second
     }
@@ -94,7 +101,7 @@ class Pew : public LEDMode {
 
   public:
     void doLoop() {
-      
+
       long currentColor;
 
       switch (colorCounter){
@@ -134,9 +141,9 @@ Pew*        pewInst        = new Pew();
 LEDMode* currentMode = solidWhiteInst;
 
 void setup(){
-  
+
   Ethernet.begin(mac, ip);
-  
+
   bool connection = false;
   while (!connection){
     if (client.connect(robotIP, port)){
@@ -146,7 +153,7 @@ void setup(){
       delay(1);
     }
   }
-  
+
   // Uncomment one of the following lines for your leds arrangement.
   // TODO Find LED strip type
   // FastLED.addLeds<TM1803, DATA_PIN, RGB>(leds, NUM_LEDS);
@@ -181,15 +188,15 @@ void changeMode(){
   if (client.available()){
     byte c = client.read();
     switch (c){
-      case 0:  currentMode = solidWhiteInst;
-               break;
-      case 1:  currentMode = colorCycleInst;
-               break;
-      case 2:  currentMode = marqueeInst;
-               break;
-      case 3:  currentMode = pewInst;
-               break;
-      default: break;
+      case Mode::SolidWhite:  currentMode = solidWhiteInst;
+                              break;
+      case Mode::ColorCycle:  currentMode = colorCycleInst;
+                              break;
+      case Mode::Marquee:     currentMode = marqueeInst;
+                              break;
+      case Mode::Pew:         currentMode = pewInst;
+                              break;
+      default:                break;
     }
   }
 
@@ -203,7 +210,7 @@ void changeMode(){
       else{
         delay(1);
       }
-    } 
+    }
   }
 }
 
