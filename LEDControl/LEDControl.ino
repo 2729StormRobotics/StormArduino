@@ -8,11 +8,18 @@
 
 CRGB leds[NUM_LEDS];
 
+enum Mode {
+  SOLIDWHITE,
+  MARQUEE,
+  COLORCYCLE,
+  PEW
+};
+
 EthernetClient client;
-byte           mac[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; //TODO find mac address
-IPAddress      ip(123,45,67,89); //TODO get usable IP Address
-IPAddress      robotIP(123,45,67,89); //TODO get robot IP address
-int            port = 20; //TODO get the port
+byte           mac[] = {0xab, 0xcd, 0xef, 0x12, 0x34, 0x56}; //TODO find mac address
+IPAddress      ip(192,168,1,10); //TODO get usable IP Address
+IPAddress      robotIP(192,168,1,118); //TODO get robot IP address
+int            port = 41900; //TODO get the port
 
 long WHITE   = 0xFFFFFF;
 long BLACK   = 0x000000;
@@ -23,13 +30,6 @@ long YELLOW  = 0xFFFF00;
 long MAGENTA = 0xFF00FF;
 long CYAN    = 0x00FFFF;
 
-enum Mode {
-  SolidWhite,
-  Marquee,
-  ColorCycle,
-  Pew
-};
-
 class LEDMode {
   public:
     virtual void doLoop();
@@ -39,7 +39,7 @@ class SolidWhite : public LEDMode {
   public:
     void doLoop() {
       for (int i = 0; i < NUM_LEDS; i++) {
-        leds[i] = WHITE;
+        leds[i] = CRGB::White;
       }
     }
 };
@@ -141,16 +141,19 @@ Pew*        pewInst        = new Pew();
 LEDMode* currentMode = solidWhiteInst;
 
 void setup(){
-
+  Serial.begin(9600);
   Ethernet.begin(mac, ip);
+  Serial.println("Starting to look");
 
   bool connection = false;
   while (!connection){
     if (client.connect(robotIP, port)){
       connection = true;
+      Serial.println("Connected!");
     }
     else{
-      delay(1);
+      Serial.println("waiting...");
+      delay(1000);
     }
   }
 
@@ -165,7 +168,7 @@ void setup(){
   // FastLED.addLeds<UCS1903, DATA_PIN, RGB>(leds, NUM_LEDS);
 
   //This is the chipset in the AM-2640 LED strip
-  //FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2801, RGB>(leds, NUM_LEDS);
 
   // FastLED.addLeds<SM16716, RGB>(leds, NUM_LEDS);
   // FastLED.addLeds<LPD8806, RGB>(leds, NUM_LEDS);
@@ -178,43 +181,71 @@ void setup(){
 }
 
 void loop(){
-  currentMode->doLoop();
-  post_frame();
+// Turn the first led red for 1 second
+Serial.println("loop");
+    leds[0] = CRGB::Red; 
+    FastLED.show();
+    delay(1000);
+    
+    // Set the first led back to black for 1 second
+    leds[0] = CRGB::Black;
+    FastLED.show();
+    delay(1000);
 
-  changeMode();
+  //Serial.println("start loop");
+  //currentMode->doLoop();
+  //Serial.println("do loop");
+  //Serial.println("start post");
+  //FastLED.show();
+  //Serial.println("done show");
+  //delay(1000);
+  //Serial.println("done delay");
+  //Serial.println("post frame");
+  //changeMode();
+  //Serial.println("done change mode");
 }
 
 void changeMode(){
+  Serial.println("change mode!");
   if (client.available()){
+    Serial.println("Got a stuff");
     byte c = client.read();
     switch (c){
-      case Mode::SolidWhite:  currentMode = solidWhiteInst;
+      case SOLIDWHITE:  currentMode = solidWhiteInst;
                               break;
-      case Mode::ColorCycle:  currentMode = colorCycleInst;
+      case COLORCYCLE:  currentMode = colorCycleInst;
                               break;
-      case Mode::Marquee:     currentMode = marqueeInst;
+      case MARQUEE:     currentMode = marqueeInst;
                               break;
-      case Mode::Pew:         currentMode = pewInst;
+      case PEW:         currentMode = pewInst;
                               break;
       default:                break;
     }
+    Serial.println((int)c);
   }
 
   //If we lost connection, wait until reconnected
   if (!client.connected()){
+    Serial.println("Lost connection. Dammit.");
     bool connection = false;
     while (!connection){
       if (client.connect(robotIP, port)){
         connection = true;
+        Serial.println("Connected!");
       }
       else{
-        delay(1);
+        delay(1000);
+        Serial.println("waiting...");
       }
     }
   }
 }
 
-void post_frame () {
+void post_frame() {
+  Serial.println("start post");
   FastLED.show();
-  delayMicroseconds(500);
+  Serial.println("done show");
+  delay(1000);
+  Serial.println("done delay");
+  
 }
