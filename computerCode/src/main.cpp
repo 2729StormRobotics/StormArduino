@@ -12,6 +12,9 @@ sf::RectangleShape rect2(sf::Vector2f(200,200));
 sf::RectangleShape rect3(sf::Vector2f(200,200));
 sf::RectangleShape rect4(sf::Vector2f(200,200));
 sf::RenderWindow   window;
+sf::TcpSocket      arduino;
+sf::IpAddress      ip(10,27,29,100);
+unsigned short     port = 1025;
 
 Mode currentMode = SolidWhite;
 
@@ -98,7 +101,6 @@ int main(){
     }
 
     logger.log("Closing...");
-
 }
 
 void doMouseMove(){
@@ -176,7 +178,29 @@ void doMouseButton(sf::Mouse::Button button){
 }
 
 void doSwitchMode(Mode mode){
+    arduino.connect(ip, port);
+
     if (mode != currentMode){
-        //TODO switch modes
+        currentMode = mode;
+
+        char data;
+        switch (mode){
+            case Mode::SolidWhite: data = (char) 0;
+                                   break;
+            case Mode::Marquee:    data = (char) 1;
+                                   break;
+            case Mode::ColorCycle: data = (char) 2;
+                                   break;
+            case Mode::Pew:        data = (char) 3;
+                                   break;
+            default: break;
+        }
+
+        char* dataPointer = &data;
+        arduino.send(dataPointer, sizeof(data));
+        logger.log("Sent ", (int) data);
     }
+
+    arduino.disconnect();
+
 }
