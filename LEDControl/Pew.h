@@ -14,20 +14,20 @@ class Pew : public LEDMode {
         long currentColor;
 
         switch (colorCounter){
-            case 0:  currentColor = CRGB::White;
+            case 0:  currentColor = WHITE;
                      break;
-            case 1:  currentColor = CRGB::Red;
+            case 1:  currentColor = RED;
                      break;
-            case 2:  currentColor = CRGB::Green;
+            case 2:  currentColor = GREEN;
                      break;
-            case 3:  currentColor = CRGB::Blue;
+            case 3:  currentColor = BLUE;
                      break;
             default: break;
         }
 
         for (int i = 0; i < NUM_LEDS; i++){
             if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = currentColor;
-            else                                                                leds[i] = CRGB::Black;
+            else                                                                leds[i] = BLACK;
         }
 
         count++;

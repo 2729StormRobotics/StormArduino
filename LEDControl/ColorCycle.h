@@ -13,19 +13,19 @@ class ColorCycle : public LEDMode {
         if (delayCounter == 0) {
             for (int i = 0; i < NUM_LEDS; i++){
                 switch (count){
-                    case 0:  leds[i] = CRGB::White;
+                    case 0:  leds[i] = WHITE;
                              break;
-                    case 1:  leds[i] = CRGB::Red;
+                    case 1:  leds[i] = RED;
                              break;
-                    case 2:  leds[i] = CRGB::Green;
+                    case 2:  leds[i] = GREEN;
                              break;
-                    case 3:  leds[i] = CRGB::Blue;
+                    case 3:  leds[i] = BLUE;
                              break;
-                    case 4:  leds[i] = CRGB::Yellow;
+                    case 4:  leds[i] = YELLOW;
                              break;
-                    case 5:  leds[i] = CRGB::Magenta;
+                    case 5:  leds[i] = MAGENTA;
                              break;
-                    case 6:  leds[i] = CRGB::Cyan;
+                    case 6:  leds[i] = CYAN;
                              break;
                     default: break;
                 }
