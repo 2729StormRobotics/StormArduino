@@ -15,12 +15,14 @@ int main(){
     logger.log("3. Pew");
     logger.log("4. Rainbow Dance Party");
     logger.log("5. Storm Spirit");
+    logger.log("6. Bounce");
     logger.logNoEndl("Make your selection by typing the number: ");
 
     int selection = -1;
     std::cin >> selection;
 
     arduino.connect(ip, port);
+    logger.log(arduino.getRemoteAddress());
 
     char data;
     data = (char) selection;

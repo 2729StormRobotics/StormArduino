@@ -10,6 +10,7 @@
 #include "Pew.h"
 #include "RainbowDanceParty.h"
 #include "StormSpirit.h"
+#include "Bounce.h"
 
 enum Mode {
   SOLIDWHITE,
@@ -17,7 +18,8 @@ enum Mode {
   COLORCYCLE,
   PEW,
   RAINBOWDANCEPARTY,
-  STORMSPIRIT
+  STORMSPIRIT,
+  BOUNCE
 };
 
 int            port = 1025;
@@ -32,7 +34,7 @@ Marquee*           marqueeInst           = new Marquee();
 Pew*               pewInst               = new Pew();
 RainbowDanceParty* rainbowDancePartyInst = new RainbowDanceParty();
 StormSpirit*       stormSpiritInst       = new StormSpirit();
-
+Bounce*            bounceInst            = new Bounce();
 
 LEDMode* currentMode = solidWhiteInst;
 
@@ -45,7 +47,6 @@ void setup(){
   Serial.begin(9600);
   Ethernet.begin(mac, ip);
   server.begin();
-  Serial.println(Ethernet.localIP());
 }
 
 void loop(){
@@ -54,31 +55,35 @@ void loop(){
   FastLED.show();
   changeMode();
   delay(20 - (millis() - lastTime)); //20 ms, or 50 cycles per second
-  Serial.println(millis() - lastTime);
 }
 
 void changeMode(){
-  EthernetClient client = server.available();
-  if (client.connected()){
-    while(client.available()){
-      byte c = client.read();
-      switch (c){
-        case SOLIDWHITE:        currentMode = solidWhiteInst;
-                                break;
-        case COLORCYCLE:        currentMode = colorCycleInst;
-                                break;
-        case MARQUEE:           currentMode = marqueeInst;
-                                break;
-        case PEW:               currentMode = pewInst;
-                                break;
-        case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
-                                break;
-        case STORMSPIRIT:       currentMode = stormSpiritInst;
-                                break;
-        default:                break;
+  Client client = server.available();
+  if (client){
+    while(client.connected()){
+      Serial.println("Client");
+      while(client.available()){
+        byte c = client.read();
+        switch (c){
+          case SOLIDWHITE:        currentMode = solidWhiteInst;
+                                  break;
+          case COLORCYCLE:        currentMode = colorCycleInst;
+                                  break;
+          case MARQUEE:           currentMode = marqueeInst;
+                                  break;
+          case PEW:               currentMode = pewInst;
+                                  break;
+          case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
+                                  break;
+          case STORMSPIRIT:       currentMode = stormSpiritInst;
+                                  break;
+          case BOUNCE:            currentMode = bounceInst;
+                                  break;
+          default:                break;
+        }
       }
+      currentMode->reset();
     }
-    currentMode->reset();
   }
   client.stop();
 }

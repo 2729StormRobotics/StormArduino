@@ -1,12 +1,13 @@
-#ifndef PEW_H
-#define PEW_H
+#ifndef BOUNCE_H
+#define BOUNCE_H
 
 #include "commonIncludes.h"
-#include "Pew.h"
+#include "LEDMode.h"
 
-class Pew : public LEDMode {
+class Bounce : public LEDMode {
     int count        = 0;
     int colorCounter = 0;
+    int direc        = 1;
 
     public:
     void doLoop() {
@@ -29,18 +30,21 @@ class Pew : public LEDMode {
             if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = currentColor;
             else                                                                leds[i] = BLACK;
         }
+        
 
-        count++;
-        count %= (NUM_LEDS / 2 - 1);
+        count += direc;
 
         if (count == 0) {
+            direc = 1;
             colorCounter++;
             colorCounter %= 4;
         }
+        else if (count == (NUM_LEDS / 2 - 1)) direc = -1;
     }
     void reset(){
         count        = 0;
         colorCounter = 0;
+        direc        = 0;
     }
 
 };
