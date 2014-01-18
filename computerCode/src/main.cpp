@@ -22,7 +22,7 @@ int main(){
     std::cin >> selection;
 
     arduino.connect(ip, port);
-    logger.log(arduino.getRemoteAddress());
+    //logger.log(arduino.getRemoteAddress());
 
     char data;
     data = (char) selection;

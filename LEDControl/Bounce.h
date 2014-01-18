@@ -13,22 +13,28 @@ class Bounce : public LEDMode {
     void doLoop() {
 
         CRGB currentColor;
+        CRGB nextColor;
 
         switch (colorCounter){
             case 0:  currentColor = WHITE;
+                     nextColor = RED;
                      break;
             case 1:  currentColor = RED;
+                     nextColor = GREEN;
                      break;
             case 2:  currentColor = GREEN;
+                     nextColor = BLUE;
                      break;
             case 3:  currentColor = BLUE;
+                     nextColor = WHITE;
                      break;
             default: break;
         }
 
         for (int i = 0; i < NUM_LEDS; i++){
-            if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = currentColor;
-            else                                                                leds[i] = BLACK;
+            if      (i == count)            leds[i] = currentColor;
+            else if (i == NUM_LEDS - count) leds[i] = nextColor;
+            else                            leds[i] = BLACK;
         }
         
 
@@ -44,7 +50,7 @@ class Bounce : public LEDMode {
     void reset(){
         count        = 0;
         colorCounter = 0;
-        direc        = 0;
+        direc        = 1;
     }
 
 };

@@ -12,9 +12,9 @@ class StormSpirit : public LEDMode {
         void doLoop(){
             if (delayCounter == 0){
                 for (int i = 0; i < NUM_LEDS; i++){
-                    if ((i + count) % 4 == 0) leds[i] = ORANGE;
+                    if      ((i + count) % 4 == 0)  leds[i] = ORANGE;
                     else if ((i + count) % 4 == 2)  leds[i] = RED;
-                    else leds[i] = BLACK;
+                    else                            leds[i] = BLACK;
                 }
 
                 count++;

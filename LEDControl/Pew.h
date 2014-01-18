@@ -27,7 +27,7 @@ class Pew : public LEDMode {
 
         for (int i = 0; i < NUM_LEDS; i++){
             if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = currentColor;
-            else                                                                leds[i] = BLACK;
+            else                                                                    leds[i] = BLACK;
         }
 
         count++;

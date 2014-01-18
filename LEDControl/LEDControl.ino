@@ -11,6 +11,7 @@
 #include "RainbowDanceParty.h"
 #include "StormSpirit.h"
 #include "Bounce.h"
+#include "USA.h"
 
 enum Mode {
   SOLIDWHITE,
@@ -19,7 +20,8 @@ enum Mode {
   PEW,
   RAINBOWDANCEPARTY,
   STORMSPIRIT,
-  BOUNCE
+  BOUNCE,
+  USA
 };
 
 int            port = 1025;
@@ -35,6 +37,7 @@ Pew*               pewInst               = new Pew();
 RainbowDanceParty* rainbowDancePartyInst = new RainbowDanceParty();
 StormSpirit*       stormSpiritInst       = new StormSpirit();
 Bounce*            bounceInst            = new Bounce();
+USAMode*           USAInst               = new USAMode();
 
 LEDMode* currentMode = solidWhiteInst;
 
@@ -58,10 +61,9 @@ void loop(){
 }
 
 void changeMode(){
-  Client client = server.available();
+  EthernetClient client = server.available();
   if (client){
     while(client.connected()){
-      Serial.println("Client");
       while(client.available()){
         byte c = client.read();
         switch (c){
@@ -78,6 +80,8 @@ void changeMode(){
           case STORMSPIRIT:       currentMode = stormSpiritInst;
                                   break;
           case BOUNCE:            currentMode = bounceInst;
+                                  break;
+          case USA:               currentMode = USAInst;
                                   break;
           default:                break;
         }
