@@ -13,21 +13,17 @@ class SetColor : public LEDMode {
         for (int i = 0; i < NUM_LEDS; i++){
             leds[i].r = r;
             leds[i].g = g;
-            beds[i].b = b;
+            leds[i].b = b;
         }
     }
-    void reset(){
-        EthernetClient client = server.available();
-        if (client){
-            while(client.connected()){
-                r = client.read();
-                g = client.read();
-                b = client.read();
-            }
-            client.stop();       
-        }    
-    }
+    void reset(){}
 
+    public:
+    void changeColor(byte _r, byte _g, byte _b){
+        r = _r;
+        g = _g;
+        b = _b;
+    }
 };
 
 #endif

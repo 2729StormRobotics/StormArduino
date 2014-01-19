@@ -8,7 +8,7 @@ CRGB leds[NUM_LEDS];
 
 CRGB RED     = CRGB::Red;
 CRGB ORANGE  = 0xFF2000;     //Their orange looks yellow
-CRGB YELLOW  = CRGB::Yellow;
+CRGB YELLOW  = 0xFF9000;
 CRGB GREEN   = CRGB::Green;
 CRGB BLUE    = CRGB::Blue;
 CRGB PURPLE  = CRGB::Purple;

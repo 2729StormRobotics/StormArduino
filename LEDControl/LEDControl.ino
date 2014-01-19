@@ -12,6 +12,8 @@
 #include "StormSpirit.h"
 #include "Bounce.h"
 #include "USA.h"
+#include "SetColor.h"
+#include "ParticleCollision.h"
 
 enum Mode {
   SOLIDWHITE,
@@ -21,7 +23,9 @@ enum Mode {
   RAINBOWDANCEPARTY,
   STORMSPIRIT,
   BOUNCE,
-  USA
+  USA,
+  SETCOLOR,
+  PARTICLECOLLISION
 };
 
 int            port = 1025;
@@ -38,6 +42,8 @@ RainbowDanceParty* rainbowDancePartyInst = new RainbowDanceParty();
 StormSpirit*       stormSpiritInst       = new StormSpirit();
 Bounce*            bounceInst            = new Bounce();
 USAMode*           USAInst               = new USAMode();
+SetColor*          setColorInst          = new SetColor();
+ParticleCollision* particleCollisionInst = new ParticleCollision();
 
 LEDMode* currentMode = solidWhiteInst;
 
@@ -82,6 +88,16 @@ void changeMode(){
           case BOUNCE:            currentMode = bounceInst;
                                   break;
           case USA:               currentMode = USAInst;
+                                  break;
+          case SETCOLOR:          {
+                                      currentMode = setColorInst;
+                                      byte r = client.read();
+                                      byte g = client.read();
+                                      byte b = client.read();
+                                      setColorInst->changeColor(r, g, b);
+                                      break;
+                                  }
+          case PARTICLECOLLISION: currentMode = particleCollisionInst;
                                   break;
           default:                break;
         }
