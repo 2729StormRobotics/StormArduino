@@ -11,8 +11,8 @@ class RainbowDanceParty : public LEDMode {
     public:
         void doLoop(){
             if (count == 0){
-                for (int i = NUM_LEDS; i > 0; i--){
-                    leds[i] = leds[i - 1];
+                for (int i = NUM_LEDS; i > 1; i--){
+                    leds[i] = leds[i - 2];
                 }
                 switch (colorCounter){
                     case 0:  leds[0] = RED;
@@ -29,6 +29,7 @@ class RainbowDanceParty : public LEDMode {
                              break;
                     default: break;
                 }
+                leds[1] = leds[0];
     
                 colorCounter++;
                 colorCounter %= 6;

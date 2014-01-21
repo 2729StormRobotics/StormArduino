@@ -4,7 +4,7 @@
 
 #include "commonIncludes.h"
 #include "LEDMode.h"
-#include "SolidWhite.h"
+#include "DisabledMode.h"
 #include "ColorCycle.h"
 #include "Marquee.h"
 #include "Pew.h"
@@ -14,9 +14,10 @@
 #include "USA.h"
 #include "SetColor.h"
 #include "ParticleCollision.h"
+#include "Pile.h"
 
 enum Mode {
-  SOLIDWHITE,
+  DISABLEDMODE,
   MARQUEE,
   COLORCYCLE,
   PEW,
@@ -25,7 +26,8 @@ enum Mode {
   BOUNCE,
   USA,
   SETCOLOR,
-  PARTICLECOLLISION
+  PARTICLECOLLISION,
+  PILE
 };
 
 int            port = 1025;
@@ -34,7 +36,7 @@ byte           mac[] = {0xab, 0xcd, 0xef, 0x12, 0x34, 0x56};
 IPAddress      ip(10,27,29,100);
 unsigned long  lastTime;
 
-SolidWhite*        solidWhiteInst        = new SolidWhite();
+DisabledMode*      disabledModeInst      = new DisabledMode();
 ColorCycle*        colorCycleInst        = new ColorCycle();
 Marquee*           marqueeInst           = new Marquee();
 Pew*               pewInst               = new Pew();
@@ -44,8 +46,9 @@ Bounce*            bounceInst            = new Bounce();
 USAMode*           USAInst               = new USAMode();
 SetColor*          setColorInst          = new SetColor();
 ParticleCollision* particleCollisionInst = new ParticleCollision();
+Pile*              pileInst              = new Pile();
 
-LEDMode* currentMode = solidWhiteInst;
+LEDMode* currentMode = disabledModeInst;
 
 void setup(){
 
@@ -73,7 +76,7 @@ void changeMode(){
       while(client.available()){
         byte c = client.read();
         switch (c){
-          case SOLIDWHITE:        currentMode = solidWhiteInst;
+          case DISABLEDMODE:      currentMode = disabledModeInst;
                                   break;
           case COLORCYCLE:        currentMode = colorCycleInst;
                                   break;
@@ -98,6 +101,8 @@ void changeMode(){
                                       break;
                                   }
           case PARTICLECOLLISION: currentMode = particleCollisionInst;
+                                  break;
+          case PILE:              currentMode = pileInst;
                                   break;
           default:                break;
         }
