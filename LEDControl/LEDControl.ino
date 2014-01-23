@@ -106,8 +106,9 @@ void changeMode(){
                                   break;
           default:                break;
         }
+        currentMode->reset();
       }
-      currentMode->reset();
+      
     }
   }
   client.stop();

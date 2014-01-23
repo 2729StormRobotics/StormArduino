@@ -31,7 +31,7 @@ class Pew : public LEDMode {
         }
 
         count++;
-        count %= (NUM_LEDS / 2 - 1);
+        count %= (NUM_LEDS / 2);
 
         if (count == 0) {
             colorCounter++;

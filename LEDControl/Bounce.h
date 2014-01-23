@@ -16,9 +16,9 @@ class Bounce : public LEDMode {
     void doLoop() {
 
         for (int i = 0; i < NUM_LEDS; i++){
-            if      (i == count)            leds[i] = color1;
-            else if (i == NUM_LEDS - count) leds[i] = color2;
-            else                            leds[i] = BLACK;
+            if      (i == count)                leds[i] = color1;
+            else if (i == NUM_LEDS - count - 1) leds[i] = color2;
+            else                                leds[i] = BLACK;
         }
         
 
@@ -37,7 +37,7 @@ class Bounce : public LEDMode {
             color2.g = random(256);
             color2.b = random(256); 
         }
-        else if (count == NUM_LEDS) direc = -1;
+        else if (count == NUM_LEDS - 1) direc = -1;
     }
     void reset(){
         count        = 0;

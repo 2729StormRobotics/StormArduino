@@ -15,8 +15,8 @@ class ParticleCollision : public LEDMode {
     void doLoop(){
         if (!exploded){
             for (int i = 0; i < NUM_LEDS; i++){
-                if (i == (int) count || i == NUM_LEDS - (int) count) leds[i] = WHITE;
-                else                                     leds[i] = BLACK;
+                if (i == (int) count || i == NUM_LEDS - (int) count - 1) leds[i] = WHITE;
+                else                                                     leds[i] = BLACK;
             }
             count += vel;
             vel += accel;
@@ -61,6 +61,7 @@ class ParticleCollision : public LEDMode {
     void reset(){
         exploded = false;
         count    = 0;
+        currColor = YELLOW;
     }
 };
 
