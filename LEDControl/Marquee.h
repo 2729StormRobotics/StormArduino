@@ -5,14 +5,16 @@
 #include "LEDMode.h"
 
 class Marquee : public LEDMode {
-    int count        = 0;
-    int delayCounter = 0;
-    int colorCounter = 0;
+    int count;
+    int delayCounter;
+    int colorCounter;
+    int topLED;
 
     public:
+        Marquee() : count(0), delayCounter(0), colorCounter(0), topLED(0) {}
         void doLoop(){
             if (delayCounter == 0){
-                for (int i = NUM_LEDS; i > 0; i--){
+                for (int i = topLED; i > 0; i--){
                     leds[i] = leds[i - 1];
                 }
                 if (count % 3 != 0) leds[0] = BLACK;
@@ -35,6 +37,10 @@ class Marquee : public LEDMode {
 
                 colorCounter++;
                 colorCounter %= 4;
+                
+                if (topLED < NUM_LEDS - 1){
+                    topLED++;
+                }
             }
 
             delayCounter++;
@@ -43,6 +49,7 @@ class Marquee : public LEDMode {
         void reset(){
             count        = 0;
             delayCounter = 0;
+            topLED       = 0;
         }
 };
 

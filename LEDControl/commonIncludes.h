@@ -6,7 +6,7 @@
 #define CLOCK_PIN 9
 CRGB leds[NUM_LEDS];
 
-CRGB RED     = CRGB::Red;
+CRGB RED     = CRGB::Red;t
 CRGB ORANGE  = 0xFF2000;     //Their orange looks yellow
 CRGB YELLOW  = 0xFF9000;
 CRGB GREEN   = CRGB::Green;

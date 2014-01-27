@@ -5,10 +5,11 @@
 #include "LEDMode.h"
 
 class DisabledMode : public LEDMode {
-    bool on         = true;
-    int  delayCount = 0;
+    bool on;
+    int  delayCount;
 
     public:
+        DisabledMode() : on(true), delayCount(0) {}
         void doLoop() {
             if (delayCount == 0){
                 for (int i = 0; i < NUM_LEDS; i++) {

@@ -5,25 +5,26 @@
 #include "LEDMode.h"
 
 class SetColor : public LEDMode {
-    byte r = 0;
-    byte g = 0;
-    byte b = 0;
-
-    void doLoop(){
-        for (int i = 0; i < NUM_LEDS; i++){
-            leds[i].r = r;
-            leds[i].g = g;
-            leds[i].b = b;
-        }
-    }
-    void reset(){}
+    byte r;
+    byte g;
+    byte b;
 
     public:
-    void changeColor(byte _r, byte _g, byte _b){
-        r = _r;
-        g = _g;
-        b = _b;
-    }
+        SetColor() : r(0), g(0), b(0) {}
+        void doLoop(){
+            for (int i = 0; i < NUM_LEDS; i++){
+                leds[i].r = r;
+                leds[i].g = g;
+                leds[i].b = b;
+            }
+        }
+        void reset(){}
+
+        void changeColor(byte _r, byte _g, byte _b){
+            r = _r;
+            g = _g;
+            b = _b;
+        }
 };
 
 #endif

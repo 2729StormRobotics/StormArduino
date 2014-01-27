@@ -5,10 +5,11 @@
 #include "LEDMode.h"
 
 class StormSpirit : public LEDMode {
-    int delayCounter = 0;
-    int count        = 0;
+    int delayCounter;
+    int count;
 
     public:
+        StormSpirit() : delayCounter(0), count(0) {}
         void doLoop(){
             if (delayCounter == 0){
                 for (int i = 0; i < NUM_LEDS; i++){

@@ -17,17 +17,17 @@
 #include "Pile.h"
 
 enum Mode {
-  DISABLEDMODE,
-  MARQUEE,
-  COLORCYCLE,
-  PEW,
-  RAINBOWDANCEPARTY,
-  STORMSPIRIT,
-  BOUNCE,
-  USA,
-  SETCOLOR,
-  PARTICLECOLLISION,
-  PILE
+    DISABLEDMODE,
+    MARQUEE,
+    COLORCYCLE,
+    PEW,
+    RAINBOWDANCEPARTY,
+    STORMSPIRIT,
+    BOUNCE,
+    USA,
+    SETCOLOR,
+    PARTICLECOLLISION,
+    PILE
 };
 
 int            port = 1025;
@@ -52,64 +52,63 @@ LEDMode* currentMode = disabledModeInst;
 
 void setup(){
 
-  FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
-  FastLED.clear();
-  FastLED.show();
+    FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
+    FastLED.clear();
+    FastLED.show();
 
-  Serial.begin(9600);
-  Ethernet.begin(mac, ip);
-  server.begin();
+    Serial.begin(9600);
+    Ethernet.begin(mac, ip);
+    server.begin();
 }
 
 void loop(){
-  lastTime = millis();
-  currentMode->doLoop();
-  FastLED.show();
-  changeMode();
-  delay(20 - (millis() - lastTime)); //20 ms, or 50 cycles per second
+    lastTime = millis();
+    currentMode->doLoop();
+    FastLED.show();
+    changeMode();
+    delay(20 - (millis() - lastTime)); //20 ms, or 50 cycles per second
 }
 
 void changeMode(){
-  EthernetClient client = server.available();
-  if (client){
-    while(client.connected()){
-      while(client.available()){
-        byte c = client.read();
-        switch (c){
-          case DISABLEDMODE:      currentMode = disabledModeInst;
-                                  break;
-          case COLORCYCLE:        currentMode = colorCycleInst;
-                                  break;
-          case MARQUEE:           currentMode = marqueeInst;
-                                  break;
-          case PEW:               currentMode = pewInst;
-                                  break;
-          case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
-                                  break;
-          case STORMSPIRIT:       currentMode = stormSpiritInst;
-                                  break;
-          case BOUNCE:            currentMode = bounceInst;
-                                  break;
-          case USA:               currentMode = USAInst;
-                                  break;
-          case SETCOLOR:          {
-                                      currentMode = setColorInst;
-                                      byte r = client.read();
-                                      byte g = client.read();
-                                      byte b = client.read();
-                                      setColorInst->changeColor(r, g, b);
-                                      break;
-                                  }
-          case PARTICLECOLLISION: currentMode = particleCollisionInst;
-                                  break;
-          case PILE:              currentMode = pileInst;
-                                  break;
-          default:                break;
+    EthernetClient client = server.available();
+    if (client){
+        while(client.connected()){
+            while(client.available()){
+                byte c = client.read();
+                switch (c){
+                    case DISABLEDMODE:      currentMode = disabledModeInst;
+                                            break;
+                    case COLORCYCLE:        currentMode = colorCycleInst;
+                                            break;
+                    case MARQUEE:           currentMode = marqueeInst;
+                                            break;
+                    case PEW:               currentMode = pewInst;
+                                            break;
+                    case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
+                                            break;
+                    case STORMSPIRIT:       currentMode = stormSpiritInst;
+                                            break;
+                    case BOUNCE:            currentMode = bounceInst;
+                                            break;
+                    case USA:               currentMode = USAInst;
+                                            break;
+                    case SETCOLOR:          {
+                                                currentMode = setColorInst;
+                                                byte r = client.read();
+                                                byte g = client.read();
+                                                byte b = client.read();
+                                                setColorInst->changeColor(r, g, b);
+                                                break;
+                                            }
+                    case PARTICLECOLLISION: currentMode = particleCollisionInst;
+                                            break;
+                    case PILE:              currentMode = pileInst;
+                                            break;
+                    default:                break;
+                }
+                currentMode->reset();
+            }
         }
-        currentMode->reset();
-      }
-      
     }
-  }
-  client.stop();
+    client.stop();
 }

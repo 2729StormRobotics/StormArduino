@@ -5,13 +5,15 @@
 #include "LEDMode.h"
 
 class USAMode : public LEDMode {
-    int colorCounter = 0;
-    int count = 0;
+    int colorCounter;
+    int count;
+    int topLED;
 
     public:
+        USAMode() : colorCounter(0), count(0), topLED(0) {}
         void doLoop(){
             if (count == 0){
-                for (int i = NUM_LEDS; i > 0; i--){
+                for (int i = topLED; i > 0; i--){
                     leds[i] = leds[i - 1];
                 }
                 switch (colorCounter){
@@ -26,6 +28,10 @@ class USAMode : public LEDMode {
 
                 colorCounter++;
                 colorCounter %= 3;
+
+                if (topLED < NUM_LEDS - 1){
+                    topLED++;
+                }
             }
 
             count++;
@@ -33,6 +39,7 @@ class USAMode : public LEDMode {
         }
         void reset(){
             colorCounter = 0;
+            topLED       = 0;
         }
 };
 
