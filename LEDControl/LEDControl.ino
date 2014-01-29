@@ -75,9 +75,14 @@ void changeMode(){
         while(client.connected()){
             while(client.available()){
                 byte c = client.read();
+                Serial.println(c);
                 switch (c){
-                    case DISABLEDMODE:      currentMode = disabledModeInst;
-                                            break;
+                    case DISABLEDMODE:      {
+                                                currentMode = disabledModeInst;
+                                                byte alliance = client.read();
+                                                disabledModeInst->setAlliance(alliance);
+                                                break;
+                                            }
                     case COLORCYCLE:        currentMode = colorCycleInst;
                                             break;
                     case MARQUEE:           currentMode = marqueeInst;

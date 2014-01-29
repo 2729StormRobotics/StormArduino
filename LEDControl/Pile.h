@@ -7,13 +7,15 @@
 class Pile : public LEDMode {
     int count;
     int noTouch;
+    CRGB color;
 
     public:
-        Pile() : count(0), noTouch(0) {}
+        Pile() : count(0), noTouch(0), color(RED) {}
         void doLoop(){
             for (int i = 0; i < NUM_LEDS; i++){
                 if (i >= noTouch && i < NUM_LEDS - noTouch){
-                    if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = WHITE;
+                    
+                    if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = color;
                     else                                                                leds[i] = BLACK;
                 }
             }
@@ -24,6 +26,9 @@ class Pile : public LEDMode {
             if (count == 0){
                 noTouch++;
                 noTouch %= (NUM_LEDS / 2 - 1);
+                color.r = random(128);
+                color.g = random(128);
+                color.b = random(128);
             }
         }
         void reset(){

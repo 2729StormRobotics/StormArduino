@@ -13,7 +13,7 @@ class ColorCycle : public LEDMode {
         void doLoop(){
             if (delayCounter == 0) {
                 for (int i = 0; i < NUM_LEDS; i++){
-                    switch (count){
+                    switch (random(7)){
                         case 0:  leds[i] = WHITE;
                                  break;
                         case 1:  leds[i] = RED;

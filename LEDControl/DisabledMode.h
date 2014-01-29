@@ -24,6 +24,21 @@ class DisabledMode : public LEDMode {
             delayCount %= 25;
         }
         void reset() {};
+        void setAlliance(byte alliance){
+            switch (alliance){
+               case 0: allianceColor = BLUE;
+                       break;
+               case 1: allianceColor = RED;
+                       break;
+               case 2: allianceColor = PURPLE;
+                       break;
+               case 3: allianceColor = ORANGE;
+                       break;
+               default: allianceColor = GREEN;
+                       break;
+            }
+            Serial.println(alliance);
+        }
 };
 
 #endif
