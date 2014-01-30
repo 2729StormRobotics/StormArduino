@@ -6,7 +6,7 @@
 
 class DisabledMode : public LEDMode {
     bool on;
-    int  delayCount;
+    uint8_t delayCount;
     CRGB allianceColor;
     
     static const byte allianceBlue       = 0; //Because I don't trust enums to be bytes
@@ -18,7 +18,7 @@ class DisabledMode : public LEDMode {
         DisabledMode() : on(true), delayCount(0), allianceColor(BLUE) {} //TODO alliance detection and color changing
         void doLoop() {
             if (delayCount == 0){
-                for (int i = 0; i < NUM_LEDS; i++) {
+                for (uint8_t i = 0; i < NUM_LEDS; i++) {
                     if (i % 2 == 0) leds[i] = WHITE;
                     else            leds[i] = allianceColor; 
                 }

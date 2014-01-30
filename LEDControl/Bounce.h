@@ -5,9 +5,9 @@
 #include "LEDMode.h"
 
 class Bounce : public LEDMode {
-    int count;
-    int colorCounter;
-    int direc;
+    uint8_t count;
+    uint8_t colorCounter;
+    uint8_t direc;
 
     CRGB color1, 
          color2;
@@ -16,7 +16,7 @@ class Bounce : public LEDMode {
         Bounce() : count(0), colorCounter(0), direc(1), color1(RED), color2(GREEN) {}
         void doLoop() {
 
-            for (int i = 0; i < NUM_LEDS; i++){
+            for (uint8_t  i = 0; i < NUM_LEDS; i++){
                 if      (i == count)                leds[i] = color1;
                 else if (i == NUM_LEDS - count - 1) leds[i] = color2;
                 else                                leds[i] = BLACK;

@@ -12,7 +12,7 @@ class SetColor : public LEDMode {
     public:
         SetColor() : r(0), g(0), b(0) {}
         void doLoop(){
-            for (int i = 0; i < NUM_LEDS; i++){
+            for (uint8_t i = 0; i < NUM_LEDS; i++){
                 leds[i].r = r;
                 leds[i].g = g;
                 leds[i].b = b;

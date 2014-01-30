@@ -5,16 +5,16 @@
 #include "LEDMode.h"
 
 class OneWayPile : public LEDMode {
-    int count;
-    int noTouch;
-    int colorCounter;
+    uint8_t count;
+    uint8_t noTouch;
+    uint8_t colorCounter;
     CRGB color;
     CRGB prevColor;
 
     public:
         OneWayPile() : count(0), noTouch(0), colorCounter(0), color(RED), prevColor(BLACK) {}
         void doLoop(){
-            for (int i = 0; i < NUM_LEDS; i++){
+            for (uint8_t i = 0; i < NUM_LEDS; i++){
                 if (i >= noTouch){
                     if (i == NUM_LEDS - 1 - count) leds[i] = color;
                     else                           leds[i] = prevColor;

@@ -5,16 +5,16 @@
 #include "LEDMode.h"
 
 class Marquee : public LEDMode {
-    int count;
-    int delayCounter;
-    int colorCounter;
-    int topLED;
+    uint8_t count;
+    uint8_t delayCounter;
+    uint8_t colorCounter;
+    uint8_t topLED;
 
     public:
         Marquee() : count(0), delayCounter(0), colorCounter(0), topLED(0) {}
         void doLoop(){
             if (delayCounter == 0){
-                for (int i = topLED; i > 0; i--){
+                for (uint8_t i = topLED; i > 0; i--){
                     leds[i] = leds[i - 1];
                 }
                 if (count % 3 != 0) leds[0] = BLACK;
