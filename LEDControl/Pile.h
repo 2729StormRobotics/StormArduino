@@ -5,14 +5,14 @@
 #include "LEDMode.h"
 
 class Pile : public LEDMode {
-    int count;
-    int noTouch;
+    uint8_t count;
+    uint8_t noTouch;
     CRGB color;
 
     public:
         Pile() : count(0), noTouch(0), color(RED) {}
         void doLoop(){
-            for (int i = 0; i < NUM_LEDS; i++){
+            for (uint8_t i = 0; i < NUM_LEDS; i++){
                 if (i >= noTouch && i < NUM_LEDS - noTouch){
                     
                     if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = color;

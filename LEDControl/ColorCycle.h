@@ -5,14 +5,14 @@
 #include "LEDMode.h"
 
 class ColorCycle : public LEDMode {
-    int count;
-    int delayCounter;
+    uint8_t count;
+    uint8_t delayCounter;
 
     public:
         ColorCycle() : count(0), delayCounter(0) {}
         void doLoop(){
             if (delayCounter == 0) {
-                for (int i = 0; i < NUM_LEDS; i++){
+                for (uint8_t i = 0; i < NUM_LEDS; i++){
                     switch (random(7)){
                         case 0:  leds[i] = WHITE;
                                  break;

@@ -5,8 +5,8 @@
 #include "Pew.h"
 
 class Pew : public LEDMode {
-    int count;
-    int colorCounter;
+    uint8_t count;
+    uint8_t colorCounter;
 
     public:
         Pew() : count(0), colorCounter(0) {}
@@ -26,7 +26,7 @@ class Pew : public LEDMode {
                 default: break;
             }
 
-            for (int i = 0; i < NUM_LEDS; i++){
+            for (uint8_t i = 0; i < NUM_LEDS; i++){
                 if (i == NUM_LEDS / 2 - 1 - count || i == NUM_LEDS / 2 + count) leds[i] = currentColor;
                 else                                                            leds[i] = BLACK;
             }

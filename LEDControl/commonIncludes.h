@@ -1,6 +1,8 @@
 #ifndef COMMON_INCLUDES_H
 #define COMMON_INCLUDES_H
 
+#include <cstdint>
+
 #define NUM_LEDS 80
 #define DATA_PIN  8
 #define CLOCK_PIN 9
