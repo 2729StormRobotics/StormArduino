@@ -8,6 +8,11 @@ class DisabledMode : public LEDMode {
     bool on;
     int  delayCount;
     CRGB allianceColor;
+    
+    static const byte allianceBlue       = 0; //Because I don't trust enums to be bytes
+    static const byte allianceRed        = 1;
+    static const byte allianceInvalid    = 2;
+    static const byte allianceRobotError = 3;
 
     public:
         DisabledMode() : on(true), delayCount(0), allianceColor(BLUE) {} //TODO alliance detection and color changing
@@ -26,16 +31,16 @@ class DisabledMode : public LEDMode {
         void reset() {};
         void setAlliance(byte alliance){
             switch (alliance){
-               case 0: allianceColor = BLUE;
-                       break;
-               case 1: allianceColor = RED;
-                       break;
-               case 2: allianceColor = PURPLE;
-                       break;
-               case 3: allianceColor = ORANGE;
-                       break;
-               default: allianceColor = GREEN;
-                       break;
+               case allianceBlue:       allianceColor = BLUE;
+                                        break;
+               case allianceRed:        allianceColor = RED;
+                                        break;
+               case allianceInvalid:    allianceColor = PURPLE;
+                                        break;
+               case allianceRobotError: allianceColor = ORANGE;
+                                        break;
+               default:                 allianceColor = GREEN;
+                                        break;
             }
             Serial.println(alliance);
         }

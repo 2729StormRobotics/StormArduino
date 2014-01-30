@@ -15,6 +15,7 @@
 #include "SetColor.h"
 #include "ParticleCollision.h"
 #include "Pile.h"
+#include "OneWayPile.h"
 
 enum Mode {
     DISABLEDMODE,
@@ -27,7 +28,8 @@ enum Mode {
     USA,
     SETCOLOR,
     PARTICLECOLLISION,
-    PILE
+    PILE,
+    ONEWAYPILE
 };
 
 int            port = 1025;
@@ -47,6 +49,7 @@ USAMode*           USAInst               = new USAMode();
 SetColor*          setColorInst          = new SetColor();
 ParticleCollision* particleCollisionInst = new ParticleCollision();
 Pile*              pileInst              = new Pile();
+OneWayPile*        oneWayPileInst        = new OneWayPile();
 
 LEDMode* currentMode = disabledModeInst;
 
@@ -81,21 +84,29 @@ void changeMode(){
                                                 currentMode = disabledModeInst;
                                                 byte alliance = client.read();
                                                 disabledModeInst->setAlliance(alliance);
+                                                currentMode->reset();
                                                 break;
                                             }
                     case COLORCYCLE:        currentMode = colorCycleInst;
+                                            currentMode->reset();
                                             break;
                     case MARQUEE:           currentMode = marqueeInst;
+                                            currentMode->reset();
                                             break;
                     case PEW:               currentMode = pewInst;
+                                            currentMode->reset();
                                             break;
                     case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
+                                            currentMode->reset();
                                             break;
                     case STORMSPIRIT:       currentMode = stormSpiritInst;
+                                            currentMode->reset();
                                             break;
                     case BOUNCE:            currentMode = bounceInst;
+                                            currentMode->reset();
                                             break;
                     case USA:               currentMode = USAInst;
+                                            currentMode->reset();
                                             break;
                     case SETCOLOR:          {
                                                 currentMode = setColorInst;
@@ -103,15 +114,21 @@ void changeMode(){
                                                 byte g = client.read();
                                                 byte b = client.read();
                                                 setColorInst->changeColor(r, g, b);
+                                                currentMode->reset();
                                                 break;
                                             }
                     case PARTICLECOLLISION: currentMode = particleCollisionInst;
+                                            currentMode->reset();
                                             break;
                     case PILE:              currentMode = pileInst;
+                                            currentMode->reset();
+                                            break;
+                    case ONEWAYPILE:        currentMode = oneWayPileInst;
+                                            currentMode->reset();
                                             break;
                     default:                break;
                 }
-                currentMode->reset();
+                
             }
         }
     }

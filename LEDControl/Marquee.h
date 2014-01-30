@@ -30,13 +30,13 @@ class Marquee : public LEDMode {
                                      break;
                             default: break;
                     }
+                    
+                    colorCounter++;
+                    colorCounter %= 4;
                 }
 
                 count++;
                 count %= 3;
-
-                colorCounter++;
-                colorCounter %= 4;
                 
                 if (topLED < NUM_LEDS - 1){
                     topLED++;
@@ -50,6 +50,7 @@ class Marquee : public LEDMode {
             count        = 0;
             delayCounter = 0;
             topLED       = 0;
+            colorCounter = 0;
         }
 };
 
