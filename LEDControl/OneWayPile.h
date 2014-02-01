@@ -44,14 +44,14 @@ class OneWayPile : public LEDMode {
                         case 3: color = YELLOW;
                                 prevColor = BLUE;
                                 break;
-                        case 4: color = PURPLE;
+                        case 4: color = CYAN;
                                 prevColor = YELLOW;
                                 break;
-                        case 5: color = CYAN;
-                                prevColor = PURPLE;
+                        case 5: color = PURPLE;
+                                prevColor = CYAN;
                                 break;
                         case 6: color = WHITE;
-                                prevColor = CYAN;
+                                prevColor = PURPLE;
                                 break;
                         case 7: color = ORANGE;
                                 prevColor = WHITE;
