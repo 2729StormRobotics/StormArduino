@@ -43,13 +43,19 @@ class ParticleCollision : public LEDMode {
                 }
 
                 uint8_t r = currColor.r;
-                r -= 20;
-                if (r < 0) r = 0;
+                if (r > 20) {
+                    r -= 20;
+                } else {
+                    r = 0;
+                }
                 currColor.r = r;
 
                 uint8_t g = currColor.g;
-                g -= 40;
-                if (g < 0) g = 0;
+                if (g > 40) {
+                    g -= 40;
+                } else {
+                    g = 0;
+                }
                 currColor.g = g;
 
                 if (++count == (NUM_LEDS / 2) + (255 / 20) + 5){
