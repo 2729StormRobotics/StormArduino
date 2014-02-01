@@ -19,7 +19,7 @@ class StormSpirit : public LEDMode {
                 }
 
                 count++;
-                count %= 2;
+                count %= 4;
             }
 
             delayCounter++;
