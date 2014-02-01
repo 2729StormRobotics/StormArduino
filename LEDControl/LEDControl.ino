@@ -51,7 +51,8 @@ ParticleCollision* particleCollisionInst = new ParticleCollision();
 Pile*              pileInst              = new Pile();
 OneWayPile*        oneWayPileInst        = new OneWayPile();
 
-LEDMode* currentMode = disabledModeInst;
+LEDMode* currentMode     = disabledModeInst;
+byte     currentModeByte = 0;
 
 void setup(){
 
@@ -66,71 +67,82 @@ void setup(){
 
 void loop(){
     lastTime = millis();
-    currentMode->doLoop();
+    currentMode->doLoop();   
     FastLED.show();
     changeMode();
-    delay(20 - (millis() - lastTime)); //20 ms, or 50 cycles per second
+    
+    int time = 20 - (millis() - lastTime);
+    if (time < 0) time = 0;
+    delay(time); //20 ms, or 50 cycles per second. Usually
+    
 }
 
 void changeMode(){
     EthernetClient client = server.available();
+    
     if (client){
-        while(client.connected()){
-            while(client.available()){
-                byte c = client.read();
+        byte finalMode = 0xFF;
+        Serial.println("Got connection");
+        while(client.available()){
+            byte c = client.read();
+            if (c != 0xFF) {//Sure it limits the modes, but let's be honest, it won't
+                changeMode(c, &client); 
+                Serial.print("Mode is now ");
                 Serial.println(c);
-                switch (c){
-                    case DISABLEDMODE:      {
-                                                currentMode = disabledModeInst;
-                                                byte alliance = client.read();
-                                                disabledModeInst->setAlliance(alliance);
-                                                currentMode->reset();
-                                                break;
-                                            }
-                    case COLORCYCLE:        currentMode = colorCycleInst;
-                                            currentMode->reset();
-                                            break;
-                    case MARQUEE:           currentMode = marqueeInst;
-                                            currentMode->reset();
-                                            break;
-                    case PEW:               currentMode = pewInst;
-                                            currentMode->reset();
-                                            break;
-                    case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
-                                            currentMode->reset();
-                                            break;
-                    case STORMSPIRIT:       currentMode = stormSpiritInst;
-                                            currentMode->reset();
-                                            break;
-                    case BOUNCE:            currentMode = bounceInst;
-                                            currentMode->reset();
-                                            break;
-                    case USA:               currentMode = USAInst;
-                                            currentMode->reset();
-                                            break;
-                    case SETCOLOR:          {
-                                                currentMode = setColorInst;
-                                                byte r = client.read();
-                                                byte g = client.read();
-                                                byte b = client.read();
-                                                setColorInst->changeColor(r, g, b);
-                                                currentMode->reset();
-                                                break;
-                                            }
-                    case PARTICLECOLLISION: currentMode = particleCollisionInst;
-                                            currentMode->reset();
-                                            break;
-                    case PILE:              currentMode = pileInst;
-                                            currentMode->reset();
-                                            break;
-                    case ONEWAYPILE:        currentMode = oneWayPileInst;
-                                            currentMode->reset();
-                                            break;
-                    default:                break;
-                }
-                
+                finalMode = c;
             }
         }
+    
+        Serial.print("Final mode is ");
+        Serial.println(finalMode);
+        if (finalMode != 0xFF) {
+            client.write(finalMode);
+            Serial.print("Wrote ");
+            Serial.println(finalMode);
+        }
+        client.stop();
     }
-    client.stop();
+    
+}
+
+void changeMode(byte mode, EthernetClient* client){
+    switch (mode){
+        case DISABLEDMODE:      currentMode = disabledModeInst;
+                                break;
+        case COLORCYCLE:        currentMode = colorCycleInst;
+                                break;
+        case MARQUEE:           currentMode = marqueeInst;
+                                break;
+        case PEW:               currentMode = pewInst;
+                                break;
+        case RAINBOWDANCEPARTY: currentMode = rainbowDancePartyInst;
+                                break;
+        case STORMSPIRIT:       currentMode = stormSpiritInst;
+                                break;
+        case BOUNCE:            currentMode = bounceInst;
+                                break;
+        case USA:               currentMode = USAInst;
+                                break;
+        case SETCOLOR:          currentMode = setColorInst;
+                                break;
+        case PARTICLECOLLISION: currentMode = particleCollisionInst;
+                                break;
+        case PILE:              currentMode = pileInst;
+                                break;
+        case ONEWAYPILE:        currentMode = oneWayPileInst;
+                                break;
+        default:                return;
+                                break;
+    }
+    currentMode->reset();
+    
+    if (mode == DISABLEDMODE){
+        byte alliance = client->read();
+        disabledModeInst->setAlliance(alliance);
+    } else if (mode == SETCOLOR) {
+        byte r = client->read();
+        byte g = client->read();
+        byte b = client->read();
+        setColorInst->changeColor(r, g, b);
+    }  
 }
