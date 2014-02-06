@@ -11,14 +11,15 @@ class SetColor : public LEDMode {
 
     public:
         SetColor() : r(0), g(0), b(0) {}
-        void doLoop(){
+        void doLoop(){}
+        
+        void reset(){
             for (uint8_t i = 0; i < NUM_LEDS; i++){
                 leds[i].r = r;
                 leds[i].g = g;
                 leds[i].b = b;
             }
         }
-        void reset(){}
 
         void changeColor(byte _r, byte _g, byte _b){
             r = _r;

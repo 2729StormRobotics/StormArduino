@@ -139,7 +139,7 @@ void changeMode(byte mode, EthernetClient* client){
                                 break;
         default:                return;
     }
-    currentMode->reset();
+    
     
     if (mode == DISABLEDMODE){
         byte alliance = client->read();
@@ -149,5 +149,7 @@ void changeMode(byte mode, EthernetClient* client){
         byte g = client->read();
         byte b = client->read();
         setColorInst->changeColor(r, g, b);
-    }  
+    }
+    
+    currentMode->reset();
 }

@@ -5,11 +5,11 @@
 #include "LEDMode.h"
 
 class ColorCycle : public LEDMode {
-    uint8_t count;
+
     uint8_t delayCounter;
 
     public:
-        ColorCycle() : count(0), delayCounter(0) {}
+        ColorCycle() : delayCounter(0) {}
         void doLoop(){
             if (delayCounter == 0) {
                 for (uint8_t i = 0; i < NUM_LEDS; i++){
@@ -31,15 +31,12 @@ class ColorCycle : public LEDMode {
                         default: break;
                     }
                 }
-                count++;
-                count %= 7;
             }
 
             delayCounter++;
             delayCounter %= 50; //Cycle once per second
         }
         void reset(){
-            count        = 0;
             delayCounter = 0;
         }
 };

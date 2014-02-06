@@ -5,7 +5,7 @@
 #include "LEDMode.h"
 
 class DisabledMode : public LEDMode {
-    bool on;
+  
     uint8_t delayCount;
     CRGB allianceColor;
     
@@ -15,14 +15,13 @@ class DisabledMode : public LEDMode {
     static const byte allianceRobotError = 3;
 
     public:
-        DisabledMode() : on(true), delayCount(0), allianceColor(GREEN) {} //start out as an error to indicate the robot sent nothing
+        DisabledMode() : delayCount(0), allianceColor(GREEN) {} //start out as an error to indicate the robot sent nothing
         void doLoop() {
             if (delayCount == 0){
                 for (uint8_t i = 0; i < NUM_LEDS; i++) {
                     if (i % 2 == 0) leds[i] = WHITE;
                     else            leds[i] = allianceColor; 
                 }
-                on = !on;
             }
 
             delayCount++;

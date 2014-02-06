@@ -5,21 +5,22 @@
 #include "LEDMode.h"
 
 class StormSpirit : public LEDMode {
+  
     uint8_t delayCounter;
-    uint8_t count;
+    uint8_t posCounter;
 
     public:
-        StormSpirit() : delayCounter(0), count(0) {}
+        StormSpirit() : delayCounter(0), posCounter(0) {}
         void doLoop(){
             if (delayCounter == 0){
                 for (uint8_t i = 0; i < NUM_LEDS; i++){
-                    if      ((i + count) % 4 == 0)  leds[i] = ORANGE;
-                    else if ((i + count) % 4 == 2)  leds[i] = RED;
-                    else                            leds[i] = BLACK;
+                    if      ((i + posCounter) % 4 == 0)  leds[i] = ORANGE;
+                    else if ((i + posCounter) % 4 == 2)  leds[i] = RED;
+                    else                                 leds[i] = BLACK;
                 }
 
-                count++;
-                count %= 4;
+                posCounter++;
+                posCounter %= 4;
             }
 
             delayCounter++;
@@ -27,7 +28,7 @@ class StormSpirit : public LEDMode {
         }
         void reset(){
             delayCounter = 0;
-            count        = 0;
+            posCounter   = 0;
         }
 };
 

@@ -5,35 +5,36 @@
 #include "LEDMode.h"
 
 class Pile : public LEDMode {
-    uint8_t count;
+  
+    uint8_t posCounter;
     uint8_t noTouch;
     CRGB color;
 
     public:
-        Pile() : count(0), noTouch(0), color(RED) {}
+        Pile() : posCounter(0), noTouch(0), color(RED) {}
         void doLoop(){
             for (uint8_t i = 0; i < NUM_LEDS; i++){
                 if (i >= noTouch && i < NUM_LEDS - noTouch){
-                    
-                    if (i == (NUM_LEDS / 2 - 1) - count || i == (NUM_LEDS / 2) + count) leds[i] = color;
-                    else                                                                leds[i] = BLACK;
+                    if (i == (NUM_LEDS / 2 - 1) - posCounter || i == (NUM_LEDS / 2) + posCounter) leds[i] = color;
+                    else                                                                          leds[i] = BLACK;
                 }
             }
 
-            count++;
-            count %= (NUM_LEDS / 2) - noTouch;
+            posCounter++;
+            posCounter %= (NUM_LEDS / 2) - noTouch;
 
-            if (count == 0){
+            if (posCounter == 0){
                 noTouch++;
                 noTouch %= (NUM_LEDS / 2 - 1);
+                
                 color.r = random(128);
                 color.g = random(128);
                 color.b = random(128);
             }
         }
         void reset(){
-            count = 0;
-            noTouch = 0;
+            posCounter = 0;
+            noTouch    = 0;
         }
 };
 

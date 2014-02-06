@@ -5,7 +5,8 @@
 #include "LEDMode.h"
 
 class Bounce : public LEDMode {
-    uint8_t count;
+  
+    uint8_t posCounter;
     uint8_t colorCounter;
     uint8_t direc;
 
@@ -13,19 +14,19 @@ class Bounce : public LEDMode {
          color2;
 
     public:
-        Bounce() : count(0), colorCounter(0), direc(1), color1(RED), color2(GREEN) {}
+        Bounce() : posCounter(0), colorCounter(0), direc(1), color1(RED), color2(GREEN) {}
         void doLoop() {
 
-            for (uint8_t  i = 0; i < NUM_LEDS; i++){
-                if      (i == count)                leds[i] = color1;
-                else if (i == NUM_LEDS - count - 1) leds[i] = color2;
-                else                                leds[i] = BLACK;
+            for (uint8_t i = 0; i < NUM_LEDS; i++){
+                if      (i == posCounter)                leds[i] = color1;
+                else if (i == NUM_LEDS - posCounter - 1) leds[i] = color2;
+                else                                     leds[i] = BLACK;
             }
             
 
-            count += direc;
+            posCounter += direc;
 
-            if (count == 0) {
+            if (posCounter == 0) {
                 direc = 1;
                 colorCounter++;
                 colorCounter %= 4;
@@ -38,10 +39,10 @@ class Bounce : public LEDMode {
                 color2.g = random(256);
                 color2.b = random(256); 
             }
-            else if (count == NUM_LEDS - 1) direc = -1;
+            else if (posCounter == NUM_LEDS - 1) direc = -1;
         }
         void reset(){
-            count        = 0;
+            posCounter     = 0;
             colorCounter = 0;
             direc        = 1;
         }

@@ -5,11 +5,12 @@
 #include "Pew.h"
 
 class Pew : public LEDMode {
-    uint8_t count;
+  
+    uint8_t posCounter;
     uint8_t colorCounter;
 
     public:
-        Pew() : count(0), colorCounter(0) {}
+        Pew() : posCounter(0), colorCounter(0) {}
         void doLoop() {
 
             CRGB currentColor;
@@ -27,20 +28,20 @@ class Pew : public LEDMode {
             }
 
             for (uint8_t i = 0; i < NUM_LEDS; i++){
-                if (i == NUM_LEDS / 2 - 1 - count || i == NUM_LEDS / 2 + count) leds[i] = currentColor;
-                else                                                            leds[i] = BLACK;
+                if (i == NUM_LEDS / 2 - 1 - posCounter || i == NUM_LEDS / 2 + posCounter) leds[i] = currentColor;
+                else                                                                      leds[i] = BLACK;
             }
 
-            count++;
-            count %= (NUM_LEDS / 2);
+            posCounter++;
+            posCounter %= (NUM_LEDS / 2);
 
-            if (count == 0) {
+            if (posCounter == 0) {
                 colorCounter++;
                 colorCounter %= 4;
             }
         }
         void reset(){
-            count        = 0;
+            posCounter   = 0;
             colorCounter = 0;
         }
 };

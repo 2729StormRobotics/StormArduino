@@ -5,14 +5,15 @@
 #include "LEDMode.h"
 
 class RainbowDanceParty : public LEDMode {
+  
     uint8_t colorCounter;
-    uint8_t count;
+    uint8_t delayCounter;
     uint8_t topLED;
 
     public:
-        RainbowDanceParty() : colorCounter(0), count(0), topLED(0) {}
+        RainbowDanceParty() : colorCounter(0), delayCounter(0), topLED(0) {}
         void doLoop(){
-            if (count == 0){
+            if (delayCounter == 0){
                 for (uint8_t i = topLED; i > 0; i--){
                     leds[i] = leds[i - 1];
                 }
@@ -52,13 +53,14 @@ class RainbowDanceParty : public LEDMode {
                 }
             }
 
-            count++;
-            count %= 2;
+            delayCounter++;
+            delayCounter %= 2;
 
         }
         void reset(){
             colorCounter = 0;
             topLED       = 0;
+            delayCounter = 0;
         }
 };
 
