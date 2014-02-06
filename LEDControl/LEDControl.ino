@@ -16,6 +16,7 @@
 #include "ParticleCollision.h"
 #include "Pile.h"
 #include "OneWayPile.h"
+#include "Collapse.h"
 
 enum Mode {
     DISABLEDMODE,
@@ -29,7 +30,8 @@ enum Mode {
     SETCOLOR,
     PARTICLECOLLISION,
     PILE,
-    ONEWAYPILE
+    ONEWAYPILE,
+    COLLAPSE
 };
 
 int            port = 1025;
@@ -50,6 +52,7 @@ SetColor*          setColorInst          = new SetColor();
 ParticleCollision* particleCollisionInst = new ParticleCollision();
 Pile*              pileInst              = new Pile();
 OneWayPile*        oneWayPileInst        = new OneWayPile();
+Collapse*          collapseInst          = new Collapse();
 
 LEDMode* currentMode     = disabledModeInst;
 byte     currentModeByte = 0;
@@ -63,11 +66,12 @@ void setup(){
     Serial.begin(9600);
     Ethernet.begin(mac, ip);
     server.begin();
+    currentMode->reset();
 }
 
 void loop(){
     lastTime = millis();
-    currentMode->doLoop();   
+    currentMode->doLoop();  
     FastLED.show();
     changeMode();
     
@@ -131,8 +135,9 @@ void changeMode(byte mode, EthernetClient* client){
                                 break;
         case ONEWAYPILE:        currentMode = oneWayPileInst;
                                 break;
-        default:                return;
+        case COLLAPSE:          currentMode = collapseInst;
                                 break;
+        default:                return;
     }
     currentMode->reset();
     
