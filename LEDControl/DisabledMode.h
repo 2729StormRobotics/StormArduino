@@ -15,7 +15,7 @@ class DisabledMode : public LEDMode {
     static const byte allianceRobotError = 3;
 
     public:
-        DisabledMode() : on(true), delayCount(0), allianceColor(BLUE) {} //TODO alliance detection and color changing
+        DisabledMode() : on(true), delayCount(0), allianceColor(GREEN) {} //start out as an error to indicate the robot sent nothing
         void doLoop() {
             if (delayCount == 0){
                 for (uint8_t i = 0; i < NUM_LEDS; i++) {
