@@ -6,42 +6,54 @@
 
 class DisabledMode : public LEDMode {
   
-    uint8_t delayCount;
-    CRGB allianceColor;
+    uint8_t section; //0 - going to red
+                     //1 - going to orange
+                     //2 - going to black
+    uint8_t delayCounter;
+    uint8_t delayMax;
+    CRGB color;
     
-    static const byte allianceBlue       = 0; //Because I don't trust enums to be bytes
-    static const byte allianceRed        = 1;
-    static const byte allianceInvalid    = 2;
-    static const byte allianceRobotError = 3;
-
     public:
-        DisabledMode() : delayCount(0), allianceColor(GREEN) {} //start out as an error to indicate the robot sent nothing
-        void doLoop() {
-            if (delayCount == 0){
-                for (uint8_t i = 0; i < NUM_LEDS; i++) {
-                    if (i % 2 == 0) leds[i] = WHITE;
-                    else            leds[i] = allianceColor; 
+        DisabledMode(): section(0),color(BLACK), delayCounter(0), delayMax(1) {}
+        void doLoop(){
+            if (delayCounter == 0){
+                if (section == 0){
+                    if (color.r < ORANGE.r){
+                        color.r += 1;
+                    } else {
+                        section = 1;
+                        color.r = 255;
+                        delayMax = 5;
+                    }
+                } else if (section == 1){
+                    if (color.g < ORANGE.g){
+                        color.g += 1;
+                    } else {
+                        color.g = ORANGE.g;
+                        section = 2;
+                    }
+                } else {
+                    if (color.g > 1){
+                        color.g -= 1;
+                    } else {
+                        color.g = 0;
+                        section = 1;
+                    }
+                }
+                
+                for (int i = 0; i < NUM_LEDS; i++){
+                    leds[i] = color;
                 }
             }
-
-            delayCount++;
-            delayCount %= 25;
+            
+            delayCounter++;
+            delayCounter %= delayMax; //start at full speed, then go to half
         }
-        void reset() {};
-        void setAlliance(byte alliance){
-            switch (alliance){
-               case allianceBlue:       allianceColor = BLUE;
-                                        break;
-               case allianceRed:        allianceColor = RED;
-                                        break;
-               case allianceInvalid:    allianceColor = PURPLE;
-                                        break;
-               case allianceRobotError: allianceColor = ORANGE;
-                                        break;
-               default:                 allianceColor = GREEN;
-                                        break;
+        
+        void reset(){
+            for (int i = 0; i < NUM_LEDS; i++){
+                leds[i] = color;
             }
-            Serial.println(alliance);
         }
 };
 

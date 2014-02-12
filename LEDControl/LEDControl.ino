@@ -5,7 +5,7 @@
 #include "commonIncludes.h"
 #include "LEDMode.h"
 #include "DisabledMode.h"
-#include "ColorCycle.h"
+#include "TeleopMode.h"
 #include "Marquee.h"
 #include "Pew.h"
 #include "RainbowDanceParty.h"
@@ -21,7 +21,7 @@
 enum Mode {
     DISABLEDMODE,
     MARQUEE,
-    COLORCYCLE,
+    TELEOPMODE,
     PEW,
     RAINBOWDANCEPARTY,
     STORMSPIRIT,
@@ -41,7 +41,7 @@ IPAddress      ip(10,27,29,100);
 unsigned long  lastTime;
 
 DisabledMode*      disabledModeInst      = new DisabledMode();
-ColorCycle*        colorCycleInst        = new ColorCycle();
+TeleopMode*        teleopModeInst        = new TeleopMode();
 Marquee*           marqueeInst           = new Marquee();
 Pew*               pewInst               = new Pew();
 RainbowDanceParty* rainbowDancePartyInst = new RainbowDanceParty();
@@ -59,6 +59,7 @@ byte     currentModeByte = 0;
 
 void setup(){
 
+    //FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
     FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS);
     FastLED.clear();
     FastLED.show();
@@ -113,7 +114,7 @@ void changeMode(byte mode, EthernetClient* client){
     switch (mode){
         case DISABLEDMODE:      currentMode = disabledModeInst;
                                 break;
-        case COLORCYCLE:        currentMode = colorCycleInst;
+        case TELEOPMODE:        currentMode = teleopModeInst;
                                 break;
         case MARQUEE:           currentMode = marqueeInst;
                                 break;
@@ -141,9 +142,9 @@ void changeMode(byte mode, EthernetClient* client){
     }
     
     
-    if (mode == DISABLEDMODE){
+    if (mode == TELEOPMODE){
         byte alliance = client->read();
-        disabledModeInst->setAlliance(alliance);
+        teleopModeInst->setAlliance(alliance);
     } else if (mode == SETCOLOR) {
         byte r = client->read();
         byte g = client->read();

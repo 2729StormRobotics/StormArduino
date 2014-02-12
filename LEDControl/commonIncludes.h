@@ -3,13 +3,14 @@
 
 #include <cstdint>
 
-#define NUM_LEDS 80
-#define DATA_PIN  8
-#define CLOCK_PIN 9
+#define NUM_LEDS 64
+#define DATA_PIN  8//green
+#define CLOCK_PIN 9//blue
+//yellow is ground
 CRGB leds[NUM_LEDS];
 
 CRGB RED     = CRGB::Red;
-CRGB ORANGE  = 0xFF1600;
+CRGB ORANGE  = 0xFF1000;
 CRGB YELLOW  = 0xFF6400;
 CRGB GREEN   = CRGB::Green;
 CRGB BLUE    = CRGB::Blue;
