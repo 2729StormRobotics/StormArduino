@@ -19,7 +19,7 @@ class TeleopMode : public LEDMode {
         void doLoop() {
             if (delayCount == 0){
                 for (uint8_t i = 0; i < NUM_LEDS; i++) {
-                    if (i % 2 == 0) leds[i] = WHITE;
+                    if (i % 2 == 0) leds[i] = 0x7A7A7A; //dimmer white
                     else            leds[i] = allianceColor; 
                 }
             }
@@ -27,7 +27,7 @@ class TeleopMode : public LEDMode {
             delayCount++;
             delayCount %= 25;
         }
-        void reset() {};
+        void reset() {}
         void setAlliance(byte alliance){
             switch (alliance){
                case allianceBlue:       allianceColor = BLUE;
@@ -41,7 +41,6 @@ class TeleopMode : public LEDMode {
                default:                 allianceColor = GREEN;
                                         break;
             }
-            Serial.println(alliance);
         }
 };
 

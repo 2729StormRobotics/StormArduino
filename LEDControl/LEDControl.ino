@@ -107,7 +107,6 @@ void changeMode(){
         }
         client.stop();
     }
-    
 }
 
 void changeMode(byte mode, EthernetClient* client){
@@ -140,7 +139,6 @@ void changeMode(byte mode, EthernetClient* client){
                                 break;
         default:                return;
     }
-    
     
     if (mode == TELEOPMODE){
         byte alliance = client->read();
