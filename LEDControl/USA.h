@@ -15,16 +15,22 @@ class USAMode : public LEDMode {
         void doLoop(){
             if (delayCounter == 0){
               
-                for (uint8_t i = topLED; i > 0; i--){
+                for (uint8_t i = NUM_LEDS / 2 + topLED; i >= NUM_LEDS / 2; i--){
                     leds[i] = leds[i - 1];
+                }
+                for (uint8_t i = NUM_LEDS / 2 - 1 - topLED; i <= NUM_LEDS / 2 - 1; i++){
+                    leds[i] = leds[i + 1];
                 }
                 
                 switch (colorCounter){
-                    case 0:  leds[0] = RED;
+                    case 0:  leds[NUM_LEDS / 2 - 1] = RED;
+                             leds[NUM_LEDS / 2]     = RED;
                              break;
-                    case 1:  leds[0] = WHITE;
+                    case 1:  leds[NUM_LEDS / 2 - 1] = WHITE;
+                             leds[NUM_LEDS / 2]     = WHITE;
                              break;
-                    case 2:  leds[0] = BLUE;
+                    case 2:  leds[NUM_LEDS / 2 - 1] = BLUE;
+                             leds[NUM_LEDS / 2]     = BLUE;
                              break;
                     default: break;
                 }
@@ -32,7 +38,7 @@ class USAMode : public LEDMode {
                 colorCounter++;
                 colorCounter %= 3;
 
-                if (topLED < NUM_LEDS - 1){
+                if (topLED < NUM_LEDS / 2 - 1){
                     topLED++;
                 }
             }

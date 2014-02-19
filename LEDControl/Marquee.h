@@ -15,25 +15,29 @@ class Marquee : public LEDMode {
         Marquee() : posCounter(0), delayCounter(0), colorCounter(0), topLED(0) {}
         void doLoop(){
             if (delayCounter == 0){
-                for (uint8_t i = topLED; i > 0; i--){
+                for (uint8_t i = NUM_LEDS / 2 + topLED; i >= NUM_LEDS / 2; i--){
                     leds[i] = leds[i - 1];
+                }
+                for (uint8_t i = NUM_LEDS / 2 - 1 - topLED; i <= NUM_LEDS / 2 - 1; i++){
+                    leds[i] = leds[i + 1];
                 }
                 if (posCounter % 3 != 0) leds[0] = BLACK;
                 else {
                     switch (colorCounter){
-                            case 0:  leds[0] = WHITE;
+                            case 0:  leds[NUM_LEDS / 2 - 1] = WHITE;
+                                     leds[NUM_LEDS / 2]     = WHITE;
                                      break;
-                            case 1:  leds[0] = RED;
+                            case 1:  leds[NUM_LEDS / 2 - 1] = RED;
+                                     leds[NUM_LEDS / 2]     = RED;
                                      break;
-                            case 2:  leds[0] = GREEN;
-                                     break;
-                            case 3:  leds[0] = BLUE;
+                            case 2:  leds[NUM_LEDS / 2 - 1] = BLUE;
+                                     leds[NUM_LEDS / 2]     = BLUE;
                                      break;
                             default: break;
                     }
                     
                     colorCounter++;
-                    colorCounter %= 4;
+                    colorCounter %= 3;
                 }
 
                 posCounter++;

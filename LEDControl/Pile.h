@@ -8,10 +8,13 @@ class Pile : public LEDMode {
   
     uint8_t posCounter;
     uint8_t noTouch;
+    
+    bool orange;
+    
     CRGB color;
 
     public:
-        Pile() : posCounter(0), noTouch(0), color(RED) {}
+        Pile() : posCounter(0), noTouch(0), color(RED), orange(true) {}
         void doLoop(){
             for (uint8_t i = 0; i < NUM_LEDS; i++){
                 if (i >= noTouch && i < NUM_LEDS - noTouch){
@@ -27,9 +30,8 @@ class Pile : public LEDMode {
                 noTouch++;
                 noTouch %= (NUM_LEDS / 2 - 1);
                 
-                color.r = random(128);
-                color.g = random(128);
-                color.b = random(128);
+                if (orange) color = ORANGE;
+                else        color = RED;
             }
         }
         void reset(){

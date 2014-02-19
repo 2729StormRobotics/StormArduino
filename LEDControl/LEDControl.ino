@@ -90,21 +90,21 @@ void changeMode(){
         Serial.println("Got connection");
         while(client.available()){
             byte c = client.read();
-            if (c != 0xFF) {//Sure it limits the modes, but let's be honest, it won't
+            //if (c != 0xFF) {//Sure it limits the modes, but let's be honest, it won't
                 changeMode(c, &client); 
                 Serial.print("Mode is now ");
                 Serial.println(c);
                 finalMode = c;
-            }
+            //}
         }
     
-        Serial.print("Final mode is ");
+        /*Serial.print("Final mode is ");
         Serial.println(finalMode);
         if (finalMode != 0xFF) {
             client.write(finalMode);
             Serial.print("Wrote ");
             Serial.println(finalMode);
-        }
+        }*/
         client.stop();
     }
 }

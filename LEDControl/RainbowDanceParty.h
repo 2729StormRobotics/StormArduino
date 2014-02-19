@@ -14,33 +14,42 @@ class RainbowDanceParty : public LEDMode {
         RainbowDanceParty() : colorCounter(0), delayCounter(0), topLED(0) {}
         void doLoop(){
             if (delayCounter == 0){
-                for (uint8_t i = topLED; i > 0; i--){
+                for (uint8_t i = NUM_LEDS / 2 + topLED; i >= NUM_LEDS / 2; i--){
                     leds[i] = leds[i - 1];
+                }
+                for (uint8_t i = NUM_LEDS / 2 - 1 - topLED; i <= NUM_LEDS / 2 - 1; i++){
+                    leds[i] = leds[i + 1];
                 }
                 switch (colorCounter){
                     case 0:
                     case 1:
-                             leds[0] = RED;
+                             leds[NUM_LEDS / 2 - 1] = RED;
+                             leds[NUM_LEDS / 2] = RED;
                              break;
                     case 2:
                     case 3:
-                             leds[0] = ORANGE;
+                             leds[NUM_LEDS / 2 - 1] = ORANGE;
+                             leds[NUM_LEDS / 2] = ORANGE;
                              break;
                     case 4:
                     case 5:
-                             leds[0] = YELLOW;
+                             leds[NUM_LEDS / 2 - 1] = YELLOW;
+                             leds[NUM_LEDS / 2] = YELLOW;
                              break;
                     case 6:
                     case 7:
-                             leds[0] = GREEN;
+                             leds[NUM_LEDS / 2 - 1] = GREEN;
+                             leds[NUM_LEDS / 2] = GREEN;
                              break;
                     case 8:
                     case 9:
-                             leds[0] = BLUE;
+                             leds[NUM_LEDS / 2 - 1] = BLUE;
+                             leds[NUM_LEDS / 2] = BLUE;
                              break;
                     case 10:
                     case 11:
-                             leds[0] = PURPLE;
+                             leds[NUM_LEDS / 2 - 1] = PURPLE;
+                             leds[NUM_LEDS / 2] = PURPLE;
                              break;
                     default: break;
                 }
@@ -48,7 +57,7 @@ class RainbowDanceParty : public LEDMode {
                 colorCounter++;
                 colorCounter %= 12;
 
-                if (topLED < NUM_LEDS - 1){
+                if (topLED < NUM_LEDS / 2 - 1){
                     topLED++;
                 }
             }
