@@ -32,6 +32,8 @@ class Pile : public LEDMode {
                 
                 if (orange) color = ORANGE;
                 else        color = RED;
+                
+                orange != orange;
             }
         }
         void reset(){
