@@ -63,6 +63,9 @@ class OneWayPile : public LEDMode {
             posCounter = 0;
             noTouch    = 0;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

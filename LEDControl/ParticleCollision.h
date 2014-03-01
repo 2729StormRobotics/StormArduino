@@ -71,6 +71,9 @@ class ParticleCollision : public LEDMode {
             pos       = 0;
             currColor = YELLOW;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

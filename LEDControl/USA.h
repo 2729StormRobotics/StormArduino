@@ -44,12 +44,15 @@ class USAMode : public LEDMode {
             }
 
             delayCounter++;
-            delayCounter %= 5;
+            delayCounter %= 3;
         }
         void reset(){
             colorCounter = 0;
             topLED       = 0;
             delayCounter = 0;
+        }
+        int getDelay(){
+            return 20;
         }
 };
 

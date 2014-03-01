@@ -12,7 +12,6 @@
 class DisabledMode : public LEDMode {
 
     uint8_t delayCounter;
-    uint8_t delayMax;
     uint8_t redCounter;
     uint8_t orangeCounter;
     float   sideRedCounter;
@@ -23,7 +22,7 @@ class DisabledMode : public LEDMode {
     //23 through 40
     
     public:
-        DisabledMode(): delayCounter(0), delayMax(2), redCounter(23), orangeCounter(40), direc(1), sideSpeed(22.0 / 17), sideRedCounter(0), sideOrangeCounter(22) {}
+        DisabledMode(): delayCounter(0), redCounter(23), orangeCounter(40), direc(1), sideSpeed(22.0 / 17), sideRedCounter(0), sideOrangeCounter(22) {}
         void doLoop(){
             if (delayCounter == 0){
                 
@@ -56,7 +55,7 @@ class DisabledMode : public LEDMode {
             }
             
             delayCounter++;
-            delayCounter %= delayMax; //start at full speed, then go to half
+            delayCounter %= 2; //start at full speed, then go to half
         }
         
         void reset(){
@@ -64,12 +63,17 @@ class DisabledMode : public LEDMode {
             redCounter = 23;
             orangeCounter = 40;
             direc = 1;
+            sideRedCounter = 0;
+            sideOrangeCounter = 22;
             
             for (int i = 0; i < NUM_LEDS; i++){
                 if (i == redCounter)         leds[i] = RED;
                 else if (i == orangeCounter) leds[i] = ORANGE;
                 else                         leds[i] = WHITE;
             }
+        }
+        int getDelay(){
+            return 20;
         }
 };
 

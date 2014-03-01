@@ -42,6 +42,9 @@ class TeleopMode : public LEDMode {
                                         break;
             }
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

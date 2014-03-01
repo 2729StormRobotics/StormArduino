@@ -46,6 +46,9 @@ class Bounce : public LEDMode {
             colorCounter = 0;
             direc        = 1;
         }
+        int getDelay(){
+            return 20;
+        }
 
 };
 

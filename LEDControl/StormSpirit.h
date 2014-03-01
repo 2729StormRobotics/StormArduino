@@ -30,6 +30,9 @@ class StormSpirit : public LEDMode {
             delayCounter = 0;
             posCounter   = 0;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

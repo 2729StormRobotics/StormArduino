@@ -26,6 +26,9 @@ class SetColor : public LEDMode {
             g = _g;
             b = _b;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

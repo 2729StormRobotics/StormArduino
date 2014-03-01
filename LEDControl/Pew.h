@@ -44,6 +44,9 @@ class Pew : public LEDMode {
             posCounter   = 0;
             colorCounter = 0;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif

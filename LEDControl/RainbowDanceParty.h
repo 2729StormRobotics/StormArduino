@@ -63,13 +63,16 @@ class RainbowDanceParty : public LEDMode {
             }
 
             delayCounter++;
-            delayCounter %= 2;
+            delayCounter %= 1; //Too lazy to redo
 
         }
         void reset(){
             colorCounter = 0;
             topLED       = 0;
             delayCounter = 0;
+        }
+        int getDelay(){
+            return 20;
         }
 };
 

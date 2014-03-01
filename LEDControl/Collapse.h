@@ -50,6 +50,9 @@ class Collapse : public LEDMode {
                 leds[i].b = random(128);
             }
         }
+        int getDelay(){
+            return 20;
+        }
         
 };
 

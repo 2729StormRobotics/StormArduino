@@ -40,6 +40,8 @@ byte           mac[] = {0xab, 0xcd, 0xef, 0x12, 0x34, 0x56};
 IPAddress      ip(10,27,29,100);
 unsigned long  lastTime;
 
+EthernetClient robot;
+
 DisabledMode*      disabledModeInst      = new DisabledMode();
 TeleopMode*        teleopModeInst        = new TeleopMode();
 Marquee*           marqueeInst           = new Marquee();
@@ -71,27 +73,30 @@ void setup(){
 }
 
 void loop(){
+  
+    while (!client.connected()){
+        robot = server.available();
+    }
+  
     lastTime = millis();
     currentMode->doLoop();  
     FastLED.show();
     changeMode();
     
-    int time = 20 - (millis() - lastTime);
+    int time = currentMode->getDelay() - (millis() - lastTime);
     if (time < 0) time = 0;
-    delay(time); //20 ms, or 50 cycles per second. Usually
+    delay(time);
     
 }
 
 void changeMode(){
-    EthernetClient client = server.available();
-    
-    if (client){
+    if (robot){
         byte finalMode = 0xFF;
         Serial.println("Got connection");
-        while(client.available()){
+        while(robot.available()){
             byte c = client.read();
             //if (c != 0xFF) {//Sure it limits the modes, but let's be honest, it won't
-                changeMode(c, &client); 
+                changeMode(c); 
                 Serial.print("Mode is now ");
                 Serial.println(c);
                 finalMode = c;
@@ -105,11 +110,10 @@ void changeMode(){
             Serial.print("Wrote ");
             Serial.println(finalMode);
         }*/
-        client.stop();
     }
 }
 
-void changeMode(byte mode, EthernetClient* client){
+void changeMode(byte mode){
     switch (mode){
         case DISABLEDMODE:      currentMode = disabledModeInst;
                                 break;
@@ -141,12 +145,12 @@ void changeMode(byte mode, EthernetClient* client){
     }
     
     if (mode == TELEOPMODE){
-        byte alliance = client->read();
+        byte alliance = robot->read();
         teleopModeInst->setAlliance(alliance);
     } else if (mode == SETCOLOR) {
-        byte r = client->read();
-        byte g = client->read();
-        byte b = client->read();
+        byte r = robot->read();
+        byte g = robot->read();
+        byte b = robot->read();
         setColorInst->changeColor(r, g, b);
     }
     

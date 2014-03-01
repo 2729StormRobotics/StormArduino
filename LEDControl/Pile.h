@@ -33,12 +33,15 @@ class Pile : public LEDMode {
                 if (orange) color = ORANGE;
                 else        color = RED;
                 
-                orange != orange;
+                orange = !orange;
             }
         }
         void reset(){
             posCounter = 0;
             noTouch    = 0;
+        }
+        int getDelay(){
+            return 10;
         }
 };
 

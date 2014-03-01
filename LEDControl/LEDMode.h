@@ -5,6 +5,7 @@
 
 class LEDMode {
     public:
+        virtual int  getDelay();
         virtual void doLoop();
         virtual void reset();
 };

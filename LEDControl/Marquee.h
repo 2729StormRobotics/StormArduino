@@ -57,6 +57,9 @@ class Marquee : public LEDMode {
             topLED       = 0;
             colorCounter = 0;
         }
+        int getDelay(){
+            return 20;
+        }
 };
 
 #endif
